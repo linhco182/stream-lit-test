@@ -4,6 +4,7 @@ from tensorflow import keras
 import transformers
 from transformers import DistilBertTokenizer, TFDistilBertModel
 import subprocess
+import os
 
 def encode_email(email_content):
   encoded = tokenizer.encode_plus(email_content, truncation=True, max_length=256, padding='max_length', return_tensors="tf")
