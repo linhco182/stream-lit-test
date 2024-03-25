@@ -5,12 +5,12 @@ import transformers
 from transformers import DistilBertTokenizer, TFDistilBertModel
 import subprocess
 import os
-from streamlit_gsheets import GSheetsConnection
+# from streamlit_gsheets import GSheetsConnection
 
 def update_csv(email_content, labels):
     new_row = [email_content]
     new_row.extend(labels)
-    conn.gsheet.append_row(new_row)
+    # conn.gsheet.append_row(new_row)
 
 
 def encode_email(email_content):
@@ -46,7 +46,7 @@ def load_model():
 with st.spinner("Loading Model...."):
     model=load_model()
     tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased', do_lower_case=True)
-    conn=st.connection("gsheets", type=GSheetsConnection)
+    # conn=st.connection("gsheets", type=GSheetsConnection)
 
 def main():
     st.title('Email Classifier')
