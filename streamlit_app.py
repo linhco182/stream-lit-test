@@ -26,7 +26,7 @@ def classify_email(email_content):
 # load model, set cache to prevent reloading
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model=tf.keras.models.load_model("model_rev1.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
+    model=tf.keras.models.load_model("./model_rev1.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
     return model
 
 with st.spinner("Loading Model...."):
