@@ -46,7 +46,7 @@ def load_model():
 with st.spinner("Loading Model...."):
     model=load_model()
     tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased', do_lower_case=True)
-    conn st.connection("gsheets", type=GSheetsConnection)
+    conn=st.connection("gsheets", type=GSheetsConnection)
 
 def main():
     st.title('Email Classifier')
