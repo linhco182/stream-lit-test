@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 import transformers
 from transformers import DistilBertTokenizer, TFDistilBertModel
+import subprocess
 
 def encode_email(email_content):
   encoded = tokenizer.encode_plus(email_content, truncation=True, max_length=256, padding='max_length', return_tensors="tf")
@@ -26,7 +27,10 @@ def classify_email(email_content):
 # load model, set cache to prevent reloading
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model=tf.keras.models.load_model("./model_rev1.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
+
+    if not os.path.isfile('model_rev1.h5'):
+        subprocess.run(['curl --output model_rev1.h5 "https://github.com/linhco182/stream-lit-test/master/sep_5.h5"'], shell=True)
+    model=tf.keras.models.load_model("model_rev1.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
     return model
 
 with st.spinner("Loading Model...."):
