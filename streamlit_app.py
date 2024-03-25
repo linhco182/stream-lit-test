@@ -5,23 +5,14 @@ import transformers
 from transformers import DistilBertTokenizer, TFDistilBertModel
 import subprocess
 import os
-import pandas as pd
-
+import gspread
 def update_csv(email_content, labels):
-    if not os.path.isfile('data.csv'):
-      # Create a new DataFrame
-      data_df = pd.DataFrame(columns=['Email Content', 'Request for Meeting', 'Request for Action', 'Request for Information'])
-      # Write the DataFrame to data.csv
-      new_row = {'Email Content': email_content, 'Request for Meeting': labels[0], 
-               'Request for Action': labels[1], 'Request for Information': labels[2]}
-      data_df = pd.concat([data_df, pd.DataFrame([new_row])], ignore_index=True)
-      data_df.to_csv('data.csv', index=False)
-    else:
-      data_df = pd.read_csv('data.csv')
-      new_row = {'Email Content': email_content, 'Request for Meeting': labels[0], 
-               'Request for Action': labels[1], 'Request for Information': labels[2]}
-      data_df = pd.concat([data_df, pd.DataFrame([new_row])], ignore_index=True)
-      data_df.to_csv('data.csv', index=False)
+    gc = gspread.service_account()
+    spreadsheet = gc.open_by_url('https://docs.google.com/spreadsheets/d/1izcVEjqnAfL8DZ8C6VLur7-o-NM2QH5nwLxGHAh9MmU/edit?usp=sharing')
+    worksheet = spreadsheet.sheet1
+    new_row = [email_content]
+    new_row.extend(labels)
+    worksheet.append_row(new_row)
 
 
 def encode_email(email_content):
