@@ -14,13 +14,13 @@ def update_csv(email_content, labels):
       # Write the DataFrame to data.csv
       new_row = {'Email Content': email_content, 'Request for Meeting': labels[0], 
                'Request for Action': labels[1], 'Request for Information': labels[2]}
-      data_df = data_df.append(new_row, ignore_index=True)
+      data_df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
       data_df.to_csv('data.csv', index=False)
     else:
       data_df = pd.read_csv('data.csv')
       new_row = {'Email Content': email_content, 'Request for Meeting': labels[0], 
                'Request for Action': labels[1], 'Request for Information': labels[2]}
-      data_df = data_df.append(new_row, ignore_index=True)
+      data_df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
       data_df.to_csv('data.csv', index=False)
 
 
