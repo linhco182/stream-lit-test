@@ -71,6 +71,12 @@ def main():
     st.subheader('Email Body')
     st.write("Please refrain from sharing sensitive information. While data is not actively stored, please be aware that data transfer occurs in an unencrypted manner.")
     email_content = st.text_area('Paste the content of your email in here:', height=200)
+    if st.button('Classify'):
+        if email_content:
+            classification_result = classify_email(email_content)
+            st.success(f'Classification result: {", ".join(classification_result)}')  # Join classes with comma
+        else:
+            st.warning('Please paste the content of your email before classifying.')
 
     # Checkbox for "Request for Meeting"
     request_for_meeting = st.checkbox('Request for Meeting')
@@ -93,12 +99,7 @@ def main():
         update_csv(email_content, labels)
         st.success('Data saved successfully!')
 
-    if st.button('Classify'):
-        if email_content:
-            classification_result = classify_email(email_content)
-            st.success(f'Classification result: {", ".join(classification_result)}')  # Join classes with comma
-        else:
-            st.warning('Please paste the content of your email before classifying.')
+    
 
 if __name__ == "__main__":
     main()
