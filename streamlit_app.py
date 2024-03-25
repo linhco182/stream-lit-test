@@ -29,9 +29,9 @@ def classify_email(email_content):
 @st.cache(allow_output_mutation=True)
 def load_model():
 
-    if not os.path.isfile('model_rev1.h5'):
-        subprocess.run(['curl --output model_rev1.h5 "https://github.com/linhco182/stream-lit-test/master/sep_5.h5"'], shell=True)
-    model=tf.keras.models.load_model("model_rev1.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
+    if not os.path.isfile('model.h5'):
+        subprocess.run(['curl --output model_rev1.h5 "https://media.githubusercontent.com/media/linhco182/stream-lit-test/master/model_rev1.h5"'], shell=True)
+    model=tf.keras.models.load_model("model.h5", custom_objects={"TFDistilBertModel": transformers.TFDistilBertModel})
     return model
 
 with st.spinner("Loading Model...."):
