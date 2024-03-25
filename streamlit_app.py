@@ -89,8 +89,6 @@ def main():
 
     # Button to submit data
     if st.button('Submit data for save'):
-        # Get email content
-        email_content = st.text_input('Email Content', '')
     
         # Encode labels based on checkbox states
         labels = [int(request_for_meeting), int(request_for_action), int(request_for_information)]
