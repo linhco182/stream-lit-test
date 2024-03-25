@@ -23,6 +23,8 @@ def classify_email(email_content):
   binary_predictions = tf.cast(prob >= threshold, dtype=tf.int32)
   classes = ['Request for Meeting', 'Request for Action', 'Request for Information']
   predicted_classes = [classes[i] for i in range(len(classes)) if binary_predictions[i] == 1]
+  if not predicted_classes:
+        return ['Delivery of Information']
   return predicted_classes
 
 # load model, set cache to prevent reloading
