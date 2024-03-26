@@ -5,12 +5,23 @@ import transformers
 from transformers import DistilBertTokenizer, TFDistilBertModel
 import subprocess
 import os
-# from streamlit_gsheets import GSheetsConnection
+from streamlit_gsheets import GSheetsConnection
+import pandas as pd
 
-def update_csv(email_content, labels):
-    new_row = [email_content]
-    new_row.extend(labels)
-    # conn.gsheet.append_row(new_row)
+
+def update_csv(email_content, labels, existing_data):
+    new_row = pd.DataFrame(
+      [
+        {
+          "text":email_content,
+          "label_1":labels[0],
+          "label_2":labels[1],
+          "label_3":labels[2]
+        }
+      ]
+    )
+    updated_df = pd.concat([existing_data, new_row], ignore_index = True)
+    conn.update(worksheet="email_entries", data = updated_df)
 
 
 def encode_email(email_content):
@@ -46,20 +57,28 @@ def load_model():
 with st.spinner("Loading Model...."):
     model=load_model()
     tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased', do_lower_case=True)
-    # conn=st.connection("gsheets", type=GSheetsConnection)
+    conn=st.connection("gsheets", type=GSheetsConnection)
+    existing_data = conn.read(worksheet="email_entries", usecols=list(range(4)), ttl=5)
+    existing_data = existing_data.dropna(how='all')
 
 def main():
     st.title('Email Classifier')
 
     st.sidebar.title('About')
-    st.sidebar.info(
-        "This is a simple app to classify emails into categories. "
-        "You can paste the content of your email in the box below and click on 'Classify' button."
-        "It will classify the email to one of 4 classes: 1. Request for Meeting 2. Request for Action 3. Request for Information 4. Purely a Delivery of Information."
-    )
+    st.sidebar.write("You can paste the content of your email in the box below and click on 'Classify' button.")
+    st.sidebar.write("It will sort the email to using the following classifiers:")
+    st.sidebar.write("**1. Request for Meeting** e.g. a casual ask for coffee catchup, finalising details of a scheduled meeting")
+    st.sidebar.write("**2. Request for Action** e.g. asking for recipient to review work, 'can you print this out?'")
+    st.sidebar.write("**3. Request for Information** e.g. Technical Request, 'can I have the name of the representative...'")
+    st.sidebar.write("**4. Delivery of Information** e.g. when the email is purely used to convey information or opinion")
 
+    st.sidebar.info("Any information submitted will be used to further improve the model. Any feedback regarding the program, such as inclusion of new tags or different way to sort emails, please send to linhcobui182@gmail.com")
+
+
+    st.info("Please refrain from sharing sensitive information.")
+    st.write("<<< Information regarding app stored in sidebar")
+    st.write("Data will not be explicitly stored unless the 'Submit Data for Save' button is pressed; however, it is important to note that data transfer occurs in an unencrypted manner.")
     st.subheader('Email Body')
-    st.write("Please refrain from sharing sensitive information. While data is not actively stored, please be aware that data transfer occurs in an unencrypted manner.")
     email_content = st.text_area('Paste the content of your email in here:', height=200)
     if st.button('Classify'):
         if email_content:
@@ -68,26 +87,31 @@ def main():
         else:
             st.warning('Please paste the content of your email before classifying.')
 
+    st.subheader('Submit Data')
     # Checkbox for "Request for Meeting"
     request_for_meeting = st.checkbox('Request for Meeting')
-    
+
     # Checkbox for "Request for Action"
     request_for_action = st.checkbox('Request for Action')
-    
+
     # Checkbox for "Request for Information"
     request_for_information = st.checkbox('Request for Information')
 
+    useless = st.checkbox('Delivery of Information')
+
     # Button to submit data
     if st.button('Submit data for save'):
-    
+      if email_content:
         # Encode labels based on checkbox states
         labels = [int(request_for_meeting), int(request_for_action), int(request_for_information)]
-    
         # Update CSV file
-        update_csv(email_content, labels)
+        update_csv(email_content, labels, existing_data)
         st.success('Data saved successfully!')
+      else:
+        st.warning('Please paste the content of your email before submitting data.')
 
-    
+
+
 
 if __name__ == "__main__":
     main()
