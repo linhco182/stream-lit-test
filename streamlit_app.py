@@ -8,7 +8,7 @@ import os
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
-
+    st.write(st.secrets['connections'])
 def update_csv(email_content, labels, existing_data):
     new_row = pd.DataFrame(
       [
