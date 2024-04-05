@@ -61,6 +61,7 @@ with st.spinner("Loading Model...."):
     existing_data = existing_data.dropna(how='all')
 
 def main():
+    main = st.secrets
     st.title('Email Classifier')
 
     st.sidebar.title('About')
