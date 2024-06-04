@@ -20,7 +20,7 @@ def update_csv(email_content, labels, existing_data):
       ]
     )
     updated_df = pd.concat([existing_data, new_row], ignore_index = True)
-    conn.update(worksheet="email_entries", data = updated_df)
+    conn.update(worksheet="email_entries", data = updated_df, spreadsheet = "https://docs.google.com/spreadsheets/d/1izcVEjqnAfL8DZ8C6VLur7-o-NM2QH5nwLxGHAh9MmU")
 
 
 def encode_email(email_content):
